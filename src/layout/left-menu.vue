@@ -1,59 +1,31 @@
 <template>
     <div>
         <el-menu
-                default-active="1-1"
-                class="el-menu-vertical-demo">
+                default-active="0"
+                unique-opened
+                class="el-menu-vertical">
             <!--遍历菜单内容-->
             <!--有俩种菜单，第一种没有子菜单的，第二种有子菜单的-->
             <template v-for="(item,index) in menuList">
-                <el-menu-item index="1" v-if="!item.children" :key="index">
-                    <i :class="item.icon"></i>
-                    <span slot="title">{{item.name}}</span>
-                </el-menu-item>
-                <el-submenu v-else index="2" :key="index">
+                <router-link :to="item.path" v-if="!item.children&&!item.hidden" :key="index.toString()">
+                    <el-menu-item :index="index.toString()">
+                        <i :class="item.icon"></i>
+                        <span slot="title">{{item.name}}</span>
+                    </el-menu-item>
+                </router-link>
+                <el-submenu :index="index.toString()" v-if="item.children&&!item.hidden" :key="index.toString()">
                     <template slot="title">
                         <i :class="item.icon"></i>
                         <span slot="title">{{item.name}}</span>
                     </template>
+                    <router-link :to="item.path + '/' + subItem.path" v-for="(subItem,subIndex) in item.children" :key="subIndex.toString()">
+                        <el-menu-item :index="(index + '-' + subIndex).toString()" v-if="!subItem.hidden">
+                            <i :class="subItem.icon"></i>
+                            <span slot="title">{{subItem.name}}</span>
+                        </el-menu-item>
+                    </router-link>
                 </el-submenu>
             </template>
-
-            <el-submenu index="3">
-                <template slot="title">
-                    <i class="el-icon-location"></i>
-                    <span>运营</span>
-                </template>
-                <el-menu-item index="2-1">
-                    <i class="el-icon-menu"></i>
-                    <span slot="title">子导航一</span>
-                </el-menu-item>
-                <el-menu-item index="2-2">
-                    <i class="el-icon-menu"></i>
-                    <span slot="title">子导航二</span>
-                </el-menu-item>
-                <el-menu-item index="2-3">
-                    <i class="el-icon-menu"></i>
-                    <span slot="title">子导航三</span>
-                </el-menu-item>
-            </el-submenu>
-            <el-submenu index="3">
-                <template slot="title">
-                    <i class="el-icon-location"></i>
-                    <span>用户</span>
-                </template>
-                <el-menu-item index="3-1">
-                    <i class="el-icon-menu"></i>
-                    <span slot="title">子导航一</span>
-                </el-menu-item>
-                <el-menu-item index="3-2">
-                    <i class="el-icon-menu"></i>
-                    <span slot="title">子导航二</span>
-                </el-menu-item>
-                <el-menu-item index="3-3">
-                    <i class="el-icon-menu"></i>
-                    <span slot="title">子导航三</span>
-                </el-menu-item>
-            </el-submenu>
         </el-menu>
     </div>
 </template>
@@ -73,4 +45,8 @@
         }
     }
 </script>
-<style></style>
+<style>
+    .el-menu-vertical a{
+        text-decoration: none;
+    }
+</style>
